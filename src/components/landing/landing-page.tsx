@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Brain,
@@ -23,9 +24,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { SITE } from "@/lib/site";
+import { CONTACT_EMAIL, SITE } from "@/lib/site";
 import { HeroVisual } from "./hero-visual";
-import { ProductsShowcase } from "./products-showcase";
+import { ProjectsShowcase } from "./projects-showcase";
+import { TestimonialsMarquee } from "./testimonials-marquee";
 import { LandingNav } from "./nav";
 import { MeshBackground } from "./mesh-background";
 
@@ -174,7 +176,7 @@ export function LandingPage() {
               className="flex flex-wrap items-center gap-3 pt-2"
             >
               <a
-                href="#contact"
+                href="/contact"
                 className={cn(
                   buttonVariants({ size: "lg" }),
                   "h-11 rounded-full px-7 text-sm"
@@ -183,13 +185,13 @@ export function LandingPage() {
                 Start a project
               </a>
               <a
-                href="#products"
+                href="/#projects"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
                   "h-11 rounded-full border-border/80 bg-background/40 px-7 text-sm backdrop-blur-sm"
                 )}
               >
-                View products
+                View projects
               </a>
             </motion.div>
             <motion.div
@@ -423,11 +425,13 @@ export function LandingPage() {
         </div>
       </SectionShell>
 
+      <TestimonialsMarquee />
+
       <SectionShell
-        id="products"
+        id="projects"
         className="min-h-0 justify-start py-24 md:py-32"
       >
-        <ProductsShowcase />
+        <ProjectsShowcase />
       </SectionShell>
 
       <section
@@ -450,14 +454,23 @@ export function LandingPage() {
             clear next step.
           </p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
-            <a
-              href="mailto:hello@example.com"
+            <Link
+              href="/contact"
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 rounded-full px-8"
               )}
             >
-              hello@example.com
+              Contact form
+            </Link>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "lg" }),
+                "h-11 rounded-full border-border/80 bg-background/30 px-8 backdrop-blur-sm"
+              )}
+            >
+              {CONTACT_EMAIL}
             </a>
             <a
               href="#hero"
@@ -475,12 +488,12 @@ export function LandingPage() {
             © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground">
+            <Link href="/privacy" className="hover:text-foreground">
               Privacy
-            </a>
-            <a href="#" className="hover:text-foreground">
+            </Link>
+            <Link href="/terms" className="hover:text-foreground">
               Terms
-            </a>
+            </Link>
           </div>
         </footer>
       </section>

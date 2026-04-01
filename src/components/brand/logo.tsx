@@ -8,7 +8,7 @@ type LogoProps = {
 };
 
 /**
- * Brand mark: hub node + orbit ring + satellites — nexus (connections) + global shipping.
+ * Brand mark: hub node + orbit ring + satellites — connections + global shipping.
  * Palette matches the landing (cyan → violet).
  */
 export function Logo({ className, variant = "full" }: LogoProps) {

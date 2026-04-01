@@ -170,3 +170,8 @@
   background-size: 48px 48px;
   animation: grid-shift 24s linear infinite;
 }
+
+/* Testimonials Swiper: constant-speed slide (marquee-style, no ease-out). */
+.testimonials-swiper .swiper-wrapper {
+  transition-timing-function: linear !important;
+}

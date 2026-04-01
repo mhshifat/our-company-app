@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { PRODUCTS } from "@/lib/site";
+import { PROJECTS } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const ACCENT = {
@@ -41,30 +41,30 @@ const ACCENT = {
 
 type AccentKey = keyof typeof ACCENT;
 
-export function ProductsShowcase() {
+export function ProjectsShowcase() {
   return (
     <div className="w-full">
       <div className="max-w-2xl">
         <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
-          Product gallery
+          Project gallery
         </p>
         <h2 className="mt-3 font-heading text-3xl font-semibold tracking-tight text-balance md:text-4xl">
-          Ship-ready products and reference builds.
+          Ship-ready projects and reference builds.
         </h2>
         <p className="mt-4 max-w-xl text-muted-foreground leading-relaxed">
-          Each concept is structured for a real launch path—swap in your brand,
+          Each project is structured for a real launch path—swap in your brand,
           data, and screenshots when you&apos;re ready.
         </p>
       </div>
 
       <div className="mt-14 flex flex-col gap-12 md:mt-20 md:gap-16">
-        {PRODUCTS.map((product, i) => {
-          const accent = ACCENT[product.accent as AccentKey];
+        {PROJECTS.map((project, i) => {
+          const accent = ACCENT[project.accent as AccentKey];
           const flip = i % 2 === 1;
 
           return (
             <motion.article
-              key={product.title}
+              key={project.title}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-8%" }}
@@ -132,16 +132,16 @@ export function ProductsShowcase() {
                     accent.tag
                   )}
                 >
-                  {product.stat}
+                  {project.stat}
                 </p>
                 <h3 className="mt-5 font-heading text-2xl font-semibold tracking-tight md:text-3xl">
-                  {product.title}
+                  {project.title}
                 </h3>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground md:text-base">
-                  {product.blurb}
+                  {project.blurb}
                 </p>
                 <div className="mt-8 flex flex-wrap gap-2">
-                  {product.tags.map((tag) => (
+                  {project.tags.map((tag) => (
                     <Badge
                       key={tag}
                       variant="outline"
