@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Nunito_Sans } from "next/font/google";
 import { SITE } from "@/lib/site";
+import { ExternalScripts } from "@/components/external-scripts";
 import "./globals.css";
 
 const nunitoSans = Nunito_Sans({
@@ -114,6 +115,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <ExternalScripts />
       </body>
     </html>
   );
