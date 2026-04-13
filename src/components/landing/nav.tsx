@@ -145,7 +145,7 @@ export function LandingNav() {
       )}
       onMouseLeave={scheduleClose}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-6 md:px-10">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-6 md:px-10">
         <Link
           href="/"
           className="rounded-lg outline-none ring-offset-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"

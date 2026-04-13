@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/user/Documents/workspaces/talentry/**)",
+      "Bash(grep -n \"publicProcedure\" /c/Users/user/Documents/workspaces/talentry/src/server/trpc/routers/*.ts)",
+      "Bash(grep -r \"CORS\\\\|cors\\\\|ORIGIN\\\\|embedding\" /c/Users/user/Documents/workspaces/talentry -name \"*.ts\" -name \"*.tsx\" -name \"*.env*\" --include=\"*.ts\" --include=\"*.tsx\" --include=\".env*\")",
+      "Bash(grep -E \"\\\\\\\\.ts$\")",
+      "Bash(grep -l \"export async function OPTIONS\" /c/Users/user/Documents/workspaces/talentry/src/app/api/**/*.ts)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}
