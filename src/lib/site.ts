@@ -5,11 +5,13 @@ export const SITE = {
     "WordPress, Shopify, and custom e-commerce—plus web, mobile, and desktop apps. AI solutions and expert consulting for teams that move fast.",
 } as const;
 
-/** Public inbox for contact form + mailto links. Replace with your domain email. */
-export const CONTACT_EMAIL = "hello@example.com" as const;
+/** Public inbox for contact form + mailto links. Set via NEXT_PUBLIC_CONTACT_EMAIL. */
+export const CONTACT_EMAIL =
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "hello@bytloop.com";
 
 export const NAV = [
   { href: "/#projects", label: "Projects" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ] as const;
 

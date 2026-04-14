@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls .env*)",
+      "Bash(cat next.config.*)"
+    ]
+  }
+}

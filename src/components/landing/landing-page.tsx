@@ -30,6 +30,8 @@ import { ProjectsShowcase } from "./projects-showcase";
 import { TestimonialsMarquee } from "./testimonials-marquee";
 import { LandingNav } from "./nav";
 import { MeshBackground } from "./mesh-background";
+import { BlogSection } from "./blog-section";
+import type { BlogListItem } from "@/lib/blog";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 36 },
@@ -124,7 +126,7 @@ const TECH = [
   "LangChain",
 ];
 
-export function LandingPage() {
+export function LandingPage({ blogPosts }: { blogPosts: BlogListItem[] }) {
   return (
     <div className="relative text-foreground">
       <MeshBackground />
@@ -426,6 +428,8 @@ export function LandingPage() {
       </SectionShell>
 
       <TestimonialsMarquee />
+
+      <BlogSection posts={blogPosts} />
 
       <SectionShell
         id="projects"
