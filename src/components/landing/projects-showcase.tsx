@@ -113,8 +113,10 @@ function ProjectPreview({
           src={url}
           title={`${title} preview`}
           loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-popups"
-          className="absolute inset-0 size-full border-0 opacity-90 transition-opacity group-hover:opacity-100"
+          sandbox="allow-scripts allow-same-origin"
+          tabIndex={-1}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 size-full border-0 opacity-90 transition-opacity group-hover:opacity-100"
         />
         <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />
         {badges}
