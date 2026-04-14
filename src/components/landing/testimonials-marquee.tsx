@@ -8,8 +8,15 @@ import type { Swiper as SwiperType } from "swiper";
 
 import "swiper/css";
 
-import { TESTIMONIALS } from "@/lib/site";
 import { cn } from "@/lib/utils";
+
+type TestimonialItem = {
+  id: string;
+  quote: string;
+  name: string;
+  role: string;
+  org: string;
+};
 
 /** ms to transition one slide; higher = slower drift (readable quotes). */
 const SWIPER_TRANSITION_MS = 14_000;
@@ -64,11 +71,23 @@ function usePrefersReducedMotion() {
   return reduce;
 }
 
-export function TestimonialsMarquee() {
+export function TestimonialsMarquee({
+  eyebrow,
+  headline,
+  subhead,
+  items,
+}: {
+  eyebrow: string;
+  headline: string;
+  subhead: string;
+  items: TestimonialItem[];
+}) {
   const reduceMotion = usePrefersReducedMotion();
 
+  if (items.length === 0) return null;
+
   const slides = [0, 1, 2].flatMap((round) =>
-    TESTIMONIALS.map((t) => ({ ...t, slideKey: `${t.id}-${round}` }))
+    items.map((t) => ({ ...t, slideKey: `${t.id}-${round}` }))
   );
 
   const onSwiper = (swiper: SwiperType) => {
@@ -84,14 +103,13 @@ export function TestimonialsMarquee() {
     >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
-          Testimonials
+          {eyebrow}
         </p>
         <h2 className="mt-3 max-w-2xl font-heading text-3xl font-semibold tracking-tight text-balance md:text-4xl">
-          Teams we&apos;ve shipped with.
+          {headline}
         </h2>
         <p className="mt-4 max-w-xl text-muted-foreground leading-relaxed">
-          Real feedback from product and engineering leaders—one continuous
-          glide, like a film strip, never stopping.
+          {subhead}
         </p>
       </div>
 
@@ -111,7 +129,7 @@ export function TestimonialsMarquee() {
             modules={[Autoplay]}
             onSwiper={onSwiper}
             loop
-            loopAdditionalSlides={TESTIMONIALS.length}
+            loopAdditionalSlides={items.length}
             slidesPerView="auto"
             spaceBetween={20}
             speed={SWIPER_TRANSITION_MS}

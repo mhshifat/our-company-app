@@ -6,14 +6,11 @@ import { ChevronDown, Menu, X } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/brand/logo";
-import { NAV } from "@/lib/site";
-import {
-  MEGA_MENU_ABOUT,
-  MEGA_MENU_PRODUCTS,
-  MEGA_MENU_SERVICES,
-  MEGA_MENU_TECHNOLOGIES,
-  type MegaMenuCategory,
-} from "@/lib/mega-menu";
+import type {
+  NavCategory,
+  NavContent,
+  NavMegaMenu,
+} from "@/lib/navigation-content";
 import { MegaMenuPanel } from "./mega-menu-panel";
 
 type MegaKey = "products" | "services" | "technologies" | "about";
@@ -26,7 +23,7 @@ function MobileMegaSection({
   onNavigate,
 }: {
   label: string;
-  categories: readonly MegaMenuCategory[];
+  categories: readonly NavCategory[];
   onNavigate: () => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -75,8 +72,10 @@ function MobileMegaSection({
   );
 }
 
-export function LandingNav() {
+export function LandingNav({ nav }: { nav: NavContent }) {
   const [open, setOpen] = useState(false);
+  const { primary, megaMenus } = nav;
+  const navLinks = [primary.projects, primary.blog, primary.contact];
   const [scrolled, setScrolled] = useState(false);
   const [mega, setMega] = useState<MegaKey | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -124,16 +123,7 @@ export function LandingNav() {
 
   useEffect(() => () => cancelClose(), [cancelClose]);
 
-  const megaCategories =
-    mega === "products"
-      ? MEGA_MENU_PRODUCTS
-      : mega === "services"
-        ? MEGA_MENU_SERVICES
-        : mega === "technologies"
-          ? MEGA_MENU_TECHNOLOGIES
-          : mega === "about"
-            ? MEGA_MENU_ABOUT
-            : null;
+  const activeMega: NavMegaMenu | null = mega ? megaMenus[mega] : null;
 
   return (
     <header
@@ -171,7 +161,7 @@ export function LandingNav() {
               onMouseEnter={() => openMega("products")}
               onFocus={() => openMega("products")}
             >
-              Products
+              {primary.products}
               <ChevronDown className="size-3.5 opacity-70" />
             </button>
             <button
@@ -186,7 +176,7 @@ export function LandingNav() {
               onMouseEnter={() => openMega("services")}
               onFocus={() => openMega("services")}
             >
-              Services
+              {primary.services}
               <ChevronDown className="size-3.5 opacity-70" />
             </button>
             <button
@@ -201,7 +191,7 @@ export function LandingNav() {
               onMouseEnter={() => openMega("technologies")}
               onFocus={() => openMega("technologies")}
             >
-              Technologies
+              {primary.technologies}
               <ChevronDown className="size-3.5 opacity-70" />
             </button>
             <button
@@ -216,12 +206,12 @@ export function LandingNav() {
               onMouseEnter={() => openMega("about")}
               onFocus={() => openMega("about")}
             >
-              About us
+              {primary.about}
               <ChevronDown className="size-3.5 opacity-70" />
             </button>
           </div>
 
-          {NAV.map((item) => (
+          {navLinks.map((item) => (
             <a
               key={item.href}
               href={item.href}
@@ -236,14 +226,14 @@ export function LandingNav() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <a
-            href="/contact"
+            href={primary.cta.href}
             className={cn(
               buttonVariants({ variant: "default", size: "sm" }),
               "rounded-full px-4"
             )}
             onMouseEnter={scheduleClose}
           >
-            Let&apos;s talk
+            {primary.cta.label}
           </a>
         </div>
 
@@ -260,7 +250,7 @@ export function LandingNav() {
         </Button>
       </div>
 
-      {mega && megaCategories ? (
+      {mega && activeMega ? (
         <div
           className="absolute left-1/2 top-full z-50 hidden w-screen max-w-none -translate-x-1/2 border-b border-border/50 bg-background/95 shadow-lg backdrop-blur-xl lg:block"
           onMouseEnter={cancelClose}
@@ -268,7 +258,10 @@ export function LandingNav() {
           <div className="mx-auto max-h-[min(70vh,calc(100dvh-5rem))] max-w-7xl overflow-y-auto px-6 py-8 md:px-10">
             <MegaMenuPanel
               variant={mega}
-              categories={megaCategories}
+              title={activeMega.title}
+              subtitle={activeMega.subtitle}
+              artLabel={activeMega.artLabel}
+              categories={activeMega.categories}
               onNavigate={closeMega}
             />
           </div>
@@ -282,27 +275,27 @@ export function LandingNav() {
         >
           <div className="flex flex-col gap-3">
             <MobileMegaSection
-              label="Products"
-              categories={MEGA_MENU_PRODUCTS}
+              label={primary.products}
+              categories={megaMenus.products.categories}
               onNavigate={() => setOpen(false)}
             />
             <MobileMegaSection
-              label="Services"
-              categories={MEGA_MENU_SERVICES}
+              label={primary.services}
+              categories={megaMenus.services.categories}
               onNavigate={() => setOpen(false)}
             />
             <MobileMegaSection
-              label="Technologies"
-              categories={MEGA_MENU_TECHNOLOGIES}
+              label={primary.technologies}
+              categories={megaMenus.technologies.categories}
               onNavigate={() => setOpen(false)}
             />
             <MobileMegaSection
-              label="About us"
-              categories={MEGA_MENU_ABOUT}
+              label={primary.about}
+              categories={megaMenus.about.categories}
               onNavigate={() => setOpen(false)}
             />
             <div className="flex flex-col gap-1 pt-1">
-              {NAV.map((item) => (
+              {navLinks.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
@@ -314,14 +307,14 @@ export function LandingNav() {
               ))}
             </div>
             <a
-              href="/contact"
+              href={primary.cta.href}
               className={cn(
                 buttonVariants({ variant: "default" }),
                 "mt-1 w-full justify-center rounded-full"
               )}
               onClick={() => setOpen(false)}
             >
-              Let&apos;s talk
+              {primary.cta.label}
             </a>
           </div>
         </div>

@@ -5,12 +5,13 @@ import { cn } from "@/lib/utils";
 
 type MegaMenuArtProps = {
   variant: "products" | "services" | "technologies" | "about";
+  artLabel: string;
   className?: string;
 };
 
 const SATELLITES = [0, 72, 144, 216, 288] as const;
 
-export function MegaMenuArt({ variant, className }: MegaMenuArtProps) {
+export function MegaMenuArt({ variant, artLabel, className }: MegaMenuArtProps) {
   const isProducts = variant === "products";
   const isTech = variant === "technologies";
   const isAbout = variant === "about";
@@ -189,13 +190,7 @@ export function MegaMenuArt({ variant, className }: MegaMenuArtProps) {
       </div>
 
       <p className="relative text-[11px] font-medium uppercase tracking-[0.2em] text-zinc-500">
-        {isAbout
-          ? "People & craft"
-          : isTech
-            ? "Stack lattice"
-            : isProducts
-              ? "Product orbit"
-              : "Delivery loop"}
+        {artLabel}
       </p>
     </div>
   );

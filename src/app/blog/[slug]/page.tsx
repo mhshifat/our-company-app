@@ -7,6 +7,8 @@ import { MeshBackground } from "@/components/landing/mesh-background";
 import { BlogCover } from "@/components/landing/blog-cover";
 import { Badge } from "@/components/ui/badge";
 import { formatPostDate, getPostBySlug, listPosts } from "@/lib/blog";
+import { getBlogPostChrome } from "@/lib/blog-post-content";
+import { getNavigationContent } from "@/lib/navigation-content";
 
 type Params = { slug: string };
 
@@ -19,8 +21,11 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-  if (!post) return { title: "Post not found" };
+  const [post, { content: chromeContent }] = await Promise.all([
+    getPostBySlug(slug),
+    getBlogPostChrome(),
+  ]);
+  if (!post) return { title: chromeContent.notFoundTitle };
   return {
     title: post.title,
     description: post.excerpt,
@@ -41,32 +46,37 @@ export default async function BlogPostPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
+  const [post, { items }, { content: chromeContent }, nav] = await Promise.all([
+    getPostBySlug(slug),
+    listPosts({ page: 1, pageSize: 6 }),
+    getBlogPostChrome(),
+    getNavigationContent(),
+  ]);
   if (!post) notFound();
 
-  const { items } = await listPosts({ page: 1, pageSize: 6 });
   const related = items.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const { chrome, related: relatedCopy } = chromeContent;
 
   return (
     <div className="relative min-h-screen text-foreground">
       <MeshBackground />
-      <LandingNav />
+      <LandingNav nav={nav} />
       <main>
         <article>
           <header className="mx-auto max-w-3xl px-6 pt-28 pb-10 md:px-10 md:pt-32">
             <Link
-              href="/blog"
+              href={chrome.backHref}
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="size-4" aria-hidden />
-              All posts
+              {chrome.backLabel}
             </Link>
             <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <span>{formatPostDate(post.date)}</span>
               <span aria-hidden>·</span>
               <span className="inline-flex items-center gap-1">
                 <Clock className="size-3" aria-hidden />
-                {post.readMinutes} min read
+                {post.readMinutes} {chrome.readSuffix}
               </span>
               <span aria-hidden>·</span>
               <span>
@@ -120,17 +130,17 @@ export default async function BlogPostPage({
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
-                  Keep reading
+                  {relatedCopy.eyebrow}
                 </p>
                 <h2 className="mt-2 font-heading text-2xl font-semibold tracking-tight md:text-3xl">
-                  More from the field notes
+                  {relatedCopy.headline}
                 </h2>
               </div>
               <Link
-                href="/blog"
+                href={relatedCopy.allHref}
                 className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:inline-flex md:items-center md:gap-1"
               >
-                All posts
+                {relatedCopy.allLabel}
                 <ArrowUpRight className="size-4" aria-hidden />
               </Link>
             </div>
@@ -151,7 +161,7 @@ export default async function BlogPostPage({
                   </div>
                   <div className="flex flex-1 flex-col gap-3 p-6 pt-2">
                     <div className="text-xs text-muted-foreground">
-                      {formatPostDate(p.date)} · {p.readMinutes} min
+                      {formatPostDate(p.date)} · {p.readMinutes} {chrome.readSuffix}
                     </div>
                     <h3 className="font-heading text-lg font-semibold leading-snug tracking-tight transition-colors group-hover:text-violet-200">
                       {p.title}

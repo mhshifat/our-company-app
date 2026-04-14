@@ -1,13 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { CONTACT_EMAIL } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const fieldClass =
   "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50";
 
-export function ContactForm() {
+export type ContactFormCopy = {
+  nameLabel: string;
+  namePlaceholder: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  companyLabel: string;
+  companyPlaceholder: string;
+  messageLabel: string;
+  messagePlaceholder: string;
+  helperText: string;
+  submitLabel: string;
+  mailtoEmail: string;
+};
+
+export function ContactForm({ copy }: { copy: ContactFormCopy }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -29,14 +42,14 @@ export function ContactForm() {
         .filter(Boolean)
         .join("\n")
     );
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${copy.mailtoEmail}?subject=${subject}&body=${body}`;
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
         <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium">
-          Name
+          {copy.nameLabel}
         </label>
         <input
           id="contact-name"
@@ -47,12 +60,12 @@ export function ContactForm() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           className={cn(fieldClass)}
-          placeholder="Jordan Lee"
+          placeholder={copy.namePlaceholder}
         />
       </div>
       <div>
         <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium">
-          Work email
+          {copy.emailLabel}
         </label>
         <input
           id="contact-email"
@@ -63,12 +76,12 @@ export function ContactForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className={cn(fieldClass)}
-          placeholder="you@company.com"
+          placeholder={copy.emailPlaceholder}
         />
       </div>
       <div>
         <label htmlFor="contact-company" className="mb-1.5 block text-sm font-medium">
-          Company <span className="font-normal text-muted-foreground">(optional)</span>
+          {copy.companyLabel}
         </label>
         <input
           id="contact-company"
@@ -78,12 +91,12 @@ export function ContactForm() {
           value={company}
           onChange={(e) => setCompany(e.target.value)}
           className={cn(fieldClass)}
-          placeholder="Acme Inc."
+          placeholder={copy.companyPlaceholder}
         />
       </div>
       <div>
         <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium">
-          How can we help?
+          {copy.messageLabel}
         </label>
         <textarea
           id="contact-message"
@@ -93,19 +106,17 @@ export function ContactForm() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className={cn(fieldClass, "min-h-[120px] resize-y")}
-          placeholder="Timeline, stack, goals, links to briefs or repos…"
+          placeholder={copy.messagePlaceholder}
         />
       </div>
-      <p className="text-xs text-muted-foreground">
-        Submitting opens your email app with this message addressed to{" "}
-        <span className="text-foreground">{CONTACT_EMAIL}</span>. You can edit
-        before sending.
-      </p>
+      {copy.helperText ? (
+        <p className="text-xs text-muted-foreground">{copy.helperText}</p>
+      ) : null}
       <button
         type="submit"
         className="inline-flex h-10 w-full items-center justify-center rounded-full bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto"
       >
-        Send message
+        {copy.submitLabel}
       </button>
     </form>
   );

@@ -50,7 +50,13 @@ function EarthGlobe() {
 
 const BG = "#020208";
 
-export function HeroUniverse() {
+export function HeroUniverse({
+  caption,
+  skills,
+}: {
+  caption: string;
+  skills: string[];
+}) {
   return (
     <div className="relative h-[min(74vh,680px)] w-full min-h-[460px] overflow-hidden rounded-2xl md:min-h-[520px] md:rounded-[1.35rem]">
       <Canvas
@@ -78,14 +84,14 @@ export function HeroUniverse() {
         </Suspense>
       </Canvas>
 
-      <SkillsHorizon />
+      <SkillsHorizon skills={skills} />
 
       <div
         className="pointer-events-none absolute inset-0 z-[4] rounded-[inherit] shadow-[inset_0_0_100px_rgba(0,0,0,0.35)]"
         aria-hidden
       />
       <p className="pointer-events-none absolute bottom-4 left-0 right-0 z-[5] text-center text-xs text-zinc-500">
-        Spinning Earth · we ship worldwide
+        {caption}
       </p>
     </div>
   );

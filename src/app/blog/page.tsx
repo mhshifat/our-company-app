@@ -6,31 +6,38 @@ import { MeshBackground } from "@/components/landing/mesh-background";
 import { BlogCover } from "@/components/landing/blog-cover";
 import { Badge } from "@/components/ui/badge";
 import { formatPostDate, listPosts } from "@/lib/blog";
-import { SITE } from "@/lib/site";
+import { getBlogPageContent } from "@/lib/blog-page-content";
+import { getNavigationContent } from "@/lib/navigation-content";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description: `Field notes from ${SITE.name}: essays on shipping commerce, content, mobile, and AI software in production.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { page } = await getBlogPageContent();
+  return {
+    title: page?.metaTitle ?? page?.title ?? "Blog",
+    description: page?.metaDesc,
+  };
+}
 
 export default async function BlogIndexPage() {
-  const { items } = await listPosts({ page: 1, pageSize: 20 });
+  const [{ items }, { content }, nav] = await Promise.all([
+    listPosts({ page: 1, pageSize: 20 }),
+    getBlogPageContent(),
+    getNavigationContent(),
+  ]);
+  const { header, featured: featuredCopy, empty } = content;
 
   if (items.length === 0) {
     return (
       <div className="relative min-h-screen text-foreground">
         <MeshBackground />
-        <LandingNav />
+        <LandingNav nav={nav} />
         <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 text-center md:px-10">
           <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
-            Field notes
+            {empty.eyebrow}
           </p>
           <h1 className="mt-3 font-heading text-4xl font-semibold tracking-tight md:text-5xl">
-            Fresh posts landing soon.
+            {empty.headline}
           </h1>
-          <p className="mt-6 text-muted-foreground">
-            We&apos;re drafting essays from the work. Check back shortly.
-          </p>
+          <p className="mt-6 text-muted-foreground">{empty.body}</p>
         </main>
       </div>
     );
@@ -41,19 +48,17 @@ export default async function BlogIndexPage() {
   return (
     <div className="relative min-h-screen text-foreground">
       <MeshBackground />
-      <LandingNav />
+      <LandingNav nav={nav} />
       <main>
         <header className="mx-auto max-w-7xl px-6 pt-28 pb-14 md:px-10 md:pt-32 md:pb-20">
           <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
-            Field notes
+            {header.eyebrow}
           </p>
           <h1 className="mt-3 max-w-3xl font-heading text-4xl font-semibold tracking-tight text-balance md:text-5xl">
-            Essays from the work—honest, specific, shippable.
+            {header.headline}
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-            Hard-won patterns from commerce, content platforms, mobile, and
-            practical AI. Written by the engineers doing the work, not the
-            marketing team.
+            {header.subhead}
           </p>
         </header>
 
@@ -76,7 +81,7 @@ export default async function BlogIndexPage() {
                   variant="secondary"
                   className="rounded-full border border-violet-400/30 bg-violet-500/10 px-3 text-[11px] text-violet-200"
                 >
-                  Featured
+                  {featuredCopy.badge}
                 </Badge>
                 <span>{formatPostDate(featured.date)}</span>
                 <span aria-hidden>·</span>
@@ -104,7 +109,7 @@ export default async function BlogIndexPage() {
                   ))}
                 </div>
                 <span className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
-                  Read
+                  {featuredCopy.readLabel}
                   <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </span>
               </div>

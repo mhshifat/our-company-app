@@ -17,7 +17,21 @@ function formatDate(iso: string): string {
   });
 }
 
-export function BlogSection({ posts }: { posts: BlogListItem[] }) {
+export function BlogSection({
+  posts,
+  eyebrow,
+  headline,
+  subhead,
+  ctaLabel,
+  ctaHref,
+}: {
+  posts: BlogListItem[];
+  eyebrow: string;
+  headline: string;
+  subhead: string;
+  ctaLabel: string;
+  ctaHref: string;
+}) {
   if (posts.length === 0) return null;
   const visible = posts.slice(0, 3);
 
@@ -35,25 +49,22 @@ export function BlogSection({ posts }: { posts: BlogListItem[] }) {
       >
         <div>
           <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
-            Field notes
+            {eyebrow}
           </p>
           <h2 className="mt-3 max-w-2xl font-heading text-3xl font-semibold tracking-tight md:text-4xl">
-            Writing from the work—honest takes, hard-won patterns.
+            {headline}
           </h2>
-          <p className="mt-4 max-w-xl text-muted-foreground">
-            Essays on shipping software: commerce, content, mobile, AI, and the
-            boring decisions that separate demos from production.
-          </p>
+          <p className="mt-4 max-w-xl text-muted-foreground">{subhead}</p>
         </div>
         <Link
-          href="/blog"
+          href={ctaHref}
           className={cn(
             buttonVariants({ variant: "outline", size: "lg" }),
             "h-11 shrink-0 rounded-full border-border/80 bg-background/40 px-6 text-sm backdrop-blur-sm"
           )}
         >
           <Sparkles className="mr-1 size-4" aria-hidden />
-          Browse all posts
+          {ctaLabel}
         </Link>
       </motion.div>
 

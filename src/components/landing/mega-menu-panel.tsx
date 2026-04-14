@@ -2,18 +2,24 @@
 
 import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import type { MegaMenuCategory } from "@/lib/mega-menu";
+import type { NavCategory } from "@/lib/navigation-content";
 import { MegaMenuArt } from "./mega-menu-art";
 import { cn } from "@/lib/utils";
 
 type MegaMenuPanelProps = {
   variant: "products" | "services" | "technologies" | "about";
-  categories: readonly MegaMenuCategory[];
+  title: string;
+  subtitle: string;
+  artLabel: string;
+  categories: readonly NavCategory[];
   onNavigate?: () => void;
 };
 
 export function MegaMenuPanel({
   variant,
+  title,
+  subtitle,
+  artLabel,
   categories,
   onNavigate,
 }: MegaMenuPanelProps) {
@@ -24,22 +30,6 @@ export function MegaMenuPanel({
   }, [categories]);
 
   const active = categories.find((c) => c.id === activeId) ?? categories[0];
-  const title =
-    variant === "products"
-      ? "Products"
-      : variant === "services"
-        ? "Services"
-        : variant === "technologies"
-          ? "Technologies"
-          : "About us";
-  const subtitle =
-    variant === "products"
-      ? "Ship-ready builds and platforms you can grow into."
-      : variant === "services"
-        ? "End-to-end engineering, from discovery to production."
-        : variant === "technologies"
-          ? "Languages, frameworks, and infra we use to ship—browse by category."
-          : "Who we are, how we engage, and how to reach the team.";
 
   return (
     <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
@@ -123,7 +113,7 @@ export function MegaMenuPanel({
       </div>
 
       <div className="lg:col-span-4">
-        <MegaMenuArt variant={variant} className="h-full" />
+        <MegaMenuArt variant={variant} artLabel={artLabel} className="h-full" />
       </div>
     </div>
   );

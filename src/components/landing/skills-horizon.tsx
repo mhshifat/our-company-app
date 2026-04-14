@@ -8,25 +8,40 @@ import {
   Monitor,
   ShoppingBag,
   Smartphone,
+  Sparkles,
+  type LucideIcon,
 } from "lucide-react";
-import { HERO_SKILLS } from "@/lib/site";
 import { cn } from "@/lib/utils";
-
-const skillIcons = {
-  wordpress: LayoutTemplate,
-  shopify: ShoppingBag,
-  web: Code2,
-  mobile: Smartphone,
-  desktop: Monitor,
-  ai: Brain,
-} as const;
 
 /** One full pass per skill row (seconds). */
 const CYCLE = 40;
 
-const n = HERO_SKILLS.length;
+/** Best-effort icon picked from the chip label so CMS-driven labels still get a glyph. */
+function iconForLabel(label: string): LucideIcon {
+  const l = label.toLowerCase();
+  if (l.includes("wordpress") || l.includes("cms")) return LayoutTemplate;
+  if (l.includes("shopify") || l.includes("commerce") || l.includes("checkout"))
+    return ShoppingBag;
+  if (l.includes("mobile") || l.includes("flutter") || l.includes("native"))
+    return Smartphone;
+  if (l.includes("desktop") || l.includes("electron") || l.includes("tauri"))
+    return Monitor;
+  if (
+    l.includes("ai") ||
+    l.includes("rag") ||
+    l.includes("llm") ||
+    l.includes("copilot")
+  )
+    return Brain;
+  if (l.includes("next") || l.includes("react") || l.includes("typescript"))
+    return Code2;
+  return Sparkles;
+}
 
-export function SkillsHorizon() {
+export function SkillsHorizon({ skills }: { skills: string[] }) {
+  const n = skills.length;
+  if (n === 0) return null;
+
   return (
     <div
       className="pointer-events-none absolute inset-0 z-[2] overflow-hidden rounded-[inherit]"
@@ -37,32 +52,27 @@ export function SkillsHorizon() {
         className="absolute inset-x-0 top-[6%] bottom-[22%] [perspective:1000px] [perspective-origin:50%_100%]"
         style={{ transformStyle: "preserve-3d" }}
       >
-        {/* Bottom → top only: fixed X per lane (no horizontal drift). Two waves in time. */}
         {[0, 1].map((phase) =>
-          HERO_SKILLS.map((skill, i) => {
-            const Icon = skillIcons[skill.key];
-            const stagger =
-              (i / n) * (CYCLE / 2) + phase * (CYCLE / 2);
+          skills.map((label, i) => {
+            const Icon = iconForLabel(label);
+            const stagger = (i / n) * (CYCLE / 2) + phase * (CYCLE / 2);
 
             const center = (n - 1) / 2;
             const spreadPx = 52;
             const columnShift = phase === 0 ? -44 : 44;
-            /** Static horizontal offset only — does not animate (avoids “flying in from the side”). */
             const xNudge = (i - center) * spreadPx + columnShift;
 
-            /** Tiny lane stagger so parallel rows don’t share one pixel line. */
             const yLane = i * 8 + phase * 6;
 
             return (
               <div
-                key={`${skill.key}-${phase}`}
+                key={`${label}-${phase}`}
                 className="absolute left-1/2 top-[90%] -translate-x-1/2"
               >
                 <motion.div
                   className="w-[min(88vw,400px)]"
                   initial={false}
                   animate={{
-                    /** Positive y = lower on screen (below horizon); negative = rise toward top & vanish */
                     y: [
                       120 + yLane,
                       40 + yLane * 0.4,
@@ -92,7 +102,7 @@ export function SkillsHorizon() {
                       <Icon className="size-4" />
                     </span>
                     <span className="text-left text-sm font-medium tracking-tight text-zinc-100">
-                      {skill.label}
+                      {label}
                     </span>
                   </div>
                 </motion.div>
@@ -102,9 +112,9 @@ export function SkillsHorizon() {
         )}
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/55" />
-      <div className="absolute inset-x-0 top-0 h-[32%] bg-gradient-to-b from-black/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-black/90 via-black/25 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black/55" />
+      <div className="absolute inset-x-0 top-0 h-[32%] bg-linear-to-b from-black/80 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[22%] bg-linear-to-t from-black/90 via-black/25 to-transparent" />
     </div>
   );
 }

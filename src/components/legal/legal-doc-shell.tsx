@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LandingNav } from "@/components/landing/nav";
 import { MeshBackground } from "@/components/landing/mesh-background";
+import { getNavigationContent } from "@/lib/navigation-content";
 
 export function LegalSection({
   id,
@@ -23,7 +24,7 @@ export function LegalSection({
   );
 }
 
-export function LegalDocShell({
+export async function LegalDocShell({
   eyebrow,
   title,
   lastUpdated,
@@ -34,10 +35,11 @@ export function LegalDocShell({
   lastUpdated: string;
   children: React.ReactNode;
 }) {
+  const nav = await getNavigationContent();
   return (
     <div className="relative min-h-screen text-foreground">
       <MeshBackground />
-      <LandingNav />
+      <LandingNav nav={nav} />
       <main className="mx-auto max-w-3xl px-6 pt-28 pb-20 md:px-10 md:pt-32 md:pb-28">
         <p className="text-sm font-medium tracking-wide text-cyan-300/90 uppercase">
           {eyebrow}
